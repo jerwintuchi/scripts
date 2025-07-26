@@ -1,0 +1,16 @@
+ACS-Setup/
+│
+├── main.ps1                       # Entry point script
+├── logs/                          # Logs directory
+│   └── acs-install.log
+├── modules/
+│   ├── check-nuget.ps1
+│   ├── check-dotnet.ps1
+│   ├── check-vcredist.ps1
+│   ├── check-sdk.ps1
+│   ├── check-dlib.ps1
+│   ├── install-nuget.ps1
+│   ├── install-dotnet.ps1
+│   ├── install-vcredist.ps1
+│   ├── install-sdk.ps1
+│   └── install-dlib.ps1

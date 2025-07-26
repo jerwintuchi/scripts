@@ -1,0 +1,5 @@
+$fileName = "env"
+$timestamp = Get-Date -Format "yyyMMdd_HHmmss"
+$newFileName = "$fileName.$timestamp.txt"
+"ENVs at $timestamp"
+Get-ChildItem Env: | Out-File "C:\Audit\$newFileName"

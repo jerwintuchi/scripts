@@ -1,0 +1,39 @@
+# Ignore logs
+acs-setup/logs/
+*.log
+
+# Ignore temp installers or downloaded .exe files
+*.exe
+*.msi
+*.tmp
+
+# Ignore PowerShell history and cache
+*.pshistory
+*.ps1xml
+*.cache
+
+# Ignore backup files
+*.bak
+*.old
+*.orig
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# Ignore user-specific or editor config
+.vscode/
+*.code-workspace
+*.suo
+*.user
+*.swp
+
+# Ignore archive folders
+archive/
+
+# Ignore test result files
+*.testlog
+*.trx
+*.coverage

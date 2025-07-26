@@ -17,6 +17,7 @@ do {
     try {
         if (-not (Test-Path $installPath)) {
             New-Item -ItemType Directory -Path $installPath -Force | Out-Null
+            Write-Log "Created directory: $installPath"
             Write-Host "Created directory: $installPath" -ForegroundColor Green
         }
         
@@ -39,8 +40,9 @@ $nugetUrl = "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe"
 $destination = Join-Path $installPath "nuget.exe"
 
 Write-Host "Downloading NuGet..." -ForegroundColor Yellow
-Write-Host "From: $nugetUrl"
-Write-Host "To: $destination"
+Write-Log "Downloading NuGet..."
+Write-Log "From: $nugetUrl"
+Write-Log "To: $destination"
 
 try {
     # Set TLS 1.2

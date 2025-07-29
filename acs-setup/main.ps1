@@ -22,12 +22,17 @@ Write-Log "Starting ACS setup check"
 . "$ModulesPath/check-nuget.ps1"
 
 # Install NuGet if needed
-if($env:ACS_Install_NuGet) {
+if ($env:ACS_Install_NuGet) {
     . "$ModulesPath/install-nuget.ps1"
 }
 
 . "$ModulesPath/check-dotnet.ps1"
-. "$ModulesPath/check-vcredist.ps1"
+
+if ($env:ACS_Install_DotNet) {
+    . "$ModulesPath/install-dotnet.ps1"
+}
+
+. "$ModulesPath/check-vcredist.ps1"%
 . "$ModulesPath/check-sdk.ps1"
 . "$ModulesPath/check-dlib.ps1"
 
@@ -42,7 +47,6 @@ if ($env:ACS_Install_Dlib) {
 }
 
 # Import & Run Installations if missing
-. "$ModulesPath/install-dotnet.ps1"
 . "$ModulesPath/install-vcredist.ps1"
 . "$ModulesPath/install-sdk.ps1"
 . "$ModulesPath/install-dlib.ps1"

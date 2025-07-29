@@ -1,4 +1,5 @@
 # ACS-Setup/main.ps1
+Import-Module utils # Import the utils.psm1 module
 
 $LogDir = "$(Split-Path -Path $MyInvocation.MyCommand.Definition)/logs"
 $LogFile = "$LogDir/acs-install.log"
@@ -12,20 +13,23 @@ function Write-Log {
     "$timestamp - $Message" | Tee-Object -Append -FilePath $LogFile
 }
 
+# Initialize summary
+$Summary = @{}
+
 Write-Log "Starting ACS setup check"
 
 # Import & Run Checks
 . "$ModulesPath/check-nuget.ps1"
+
+# Install NuGet if needed
+if($env:ACS_Install_NuGet) {
+    . "$ModulesPath/install-nuget.ps1"
+}
+
 . "$ModulesPath/check-dotnet.ps1"
 . "$ModulesPath/check-vcredist.ps1"
 . "$ModulesPath/check-sdk.ps1"
 . "$ModulesPath/check-dlib.ps1"
-
-# Ensure NuGet is available before using it in later scripts
-if ($env:ACS_Install_NuGet) {
-    $env:ACS_NuGet_Install_Path = Read-Host "Enter install directory for NuGet.exe"
-}
-. "$ModulesPath/install-nuget.ps1"
 
 # Prompt for install locations if needed (after NuGet installed)
 if ($env:ACS_Install_SDK) {
@@ -44,3 +48,4 @@ if ($env:ACS_Install_Dlib) {
 . "$ModulesPath/install-dlib.ps1"
 
 Write-Log "ACS setup completed"
+

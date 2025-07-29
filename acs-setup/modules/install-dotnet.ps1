@@ -36,21 +36,21 @@ if ($env:ACS_Install_DotNet) {
 
     $installPath = if ($specificVersion) { $specificPath } else { $defaultPath }
 
-    Write-Log "Downloading .NET Runtime 8 installer..."
+    Write-Log "Downloading .NET Runtime 8 installer..." -ForegroundColor Yellow
     Invoke-WebRequest -Uri $dotnetInstaller -OutFile $installPath -MaximumRedirection 5
     $hashBefore = Get-FileHashString $installPath
     Write-Log "Installer SHA512: $hashBefore"
 
     if (-not (Is-ValidExe $installPath)) {
-        Write-Log "ERROR: Downloaded file is not a valid executable. Aborting installation."
+        Write-Log "ERROR: Downloaded file is not a valid executable. Aborting installation." -ForegroundColor Red
         return
     }
 
-    Write-Log "Installing .NET Runtime 8..."
+    Write-Log "Installing .NET Runtime 8..." -ForegroundColor Yellow
     $process = Start-Process -FilePath $installPath -ArgumentList "/passive" -Wait -PassThru
 
     if ($process.ExitCode -eq 0) {
-        Write-Log ".NET Runtime $version installed at $(& 'dotnet' --info | Select-String 'Base Path').Line"
+        Write-Log ".NET Runtime $version installed at $(& 'dotnet' --info | Select-String 'Base Path').Line" -ForegroundColor Green
         # Graceful installer cleanup
         try {
             Start-Sleep -Seconds 2
@@ -58,19 +58,19 @@ if ($env:ACS_Install_DotNet) {
             Write-Log "Installer removed: $installPath"
         }
         catch {
-            Write-Log "WARNING: Could not remove installer $installPath - $_"
+            Write-Log "WARNING: Could not remove installer $installPath - $_" -ForegroundColor Yellow
             Write-Log "Try to remove it manually at $installPath" -ForegroundColor Yellow
         }
 
     }
     elseif ($process.ExitCode -eq 1602) {
-        Write-Log "WARNING: User cancelled .NET Runtime installation. Exit Code 1602"
+        Write-Log "WARNING: User cancelled .NET Runtime installation. Exit Code 1602" -ForegroundColor Yellow
     }
     elseif ($process.ExitCode -eq 3010) {
-        Write-Log "INFO: Installation successful but system restart is required. Exit Code 3010"
+        Write-Log "INFO: Installation successful but system restart is required. Exit Code 3010" -ForegroundColor Yellow
     }
     else {
-        Write-Log "ERROR: .NET installer exited with code $($process.ExitCode)"
+        Write-Log "ERROR: .NET installer exited with code $($process.ExitCode)" -ForegroundColor Red
         throw ".NET Runtime installation failed or was cancelled"
     }
 }

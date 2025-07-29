@@ -32,7 +32,7 @@ if ($env:ACS_Install_DotNet) {
     . "$ModulesPath/install-dotnet.ps1"
 }
 
-. "$ModulesPath/check-vcredist.ps1"%
+. "$ModulesPath/check-vcredist.ps1"
 . "$ModulesPath/check-sdk.ps1"
 . "$ModulesPath/check-dlib.ps1"
 

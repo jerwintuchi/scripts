@@ -129,3 +129,22 @@ function Test-ComponentInstalled {
 
     return $found
 }
+
+
+function Get-FileHashString {
+    param([string]$Path)
+    if (Test-Path $Path) {
+        return (Get-FileHash -Path $Path -Algorithm SHA512).Hash
+    }
+    return ""
+}
+
+function Is-ValidExe {
+    param([string]$Path)
+    try {
+        $output = & $Path /?
+        return $true
+    } catch {
+        return $false
+    }
+}

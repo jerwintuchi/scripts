@@ -26,6 +26,9 @@ if ($env:ACS_Install_DotNet) {
         $env:ACS_DotNet_Install_Path = "$env:ProgramFiles\dotnet"
     }
 
+    # set install path and version for dotnet runtime
+    # fallback to default if user input is empty
+
     $defaultInstallPath = "https://builds.dotnet.microsoft.com/dotnet/Runtime/8.0.0/dotnet-runtime-8.0.0-win-x64.exe"
     $specificVersionPath = "https://builds.dotnet.microsoft.com/dotnet/Runtime/$specificVersion/dotnet-runtime-$specificVersion-win-x64.exe"
 
@@ -41,7 +44,7 @@ if ($env:ACS_Install_DotNet) {
     $hashBefore = Get-FileHashString $installPath
     Write-Log "Installer SHA512: $hashBefore"
 
-    if (-not (Is-ValidExe $installPath)) {
+    if (-not (Read-ValidExe $installPath)) {
         Write-Log "ERROR: Downloaded file is not a valid executable. Aborting installation." -ForegroundColor Red
         return
     }

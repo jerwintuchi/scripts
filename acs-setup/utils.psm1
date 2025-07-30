@@ -1,23 +1,24 @@
 # utils.psm1
 function Get-InstalledComponents {
-  # Query the registry for installed programs
-  $installedPrograms = Get-ChildItem -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
-  # Create an array to store the list of installed components
-  $installedComponents = @()
-  foreach ($program in $installedPrograms) {
-    $installedComponents += $program.GetValue("DisplayName")
-  }
-  return $installedComponents
+    # Query the registry for installed programs
+    $installedPrograms = Get-ChildItem -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
+    # Create an array to store the list of installed components
+    $installedComponents = @()
+    foreach ($program in $installedPrograms) {
+        $installedComponents += $program.GetValue("DisplayName")
+    }
+    return $installedComponents
 }
 
 function Get-ComponentName {
-  param ($componentName)
-  $installedComponents = Get-InstalledComponents
-  if ($installedComponents -contains $componentName) {
-    return $true
-  } else {
-    return $false
-  }
+    param ($componentName)
+    $installedComponents = Get-InstalledComponents
+    if ($installedComponents -contains $componentName) {
+        return $true
+    }
+    else {
+        return $false
+    }
 }
 
 function Test-ComponentInstalled {
@@ -36,8 +37,8 @@ function Test-ComponentInstalled {
         [switch]$VerboseOutput = $false
     )
     if ($VerboseOutput) {
-    Write-Host " Checking component: $Name" -ForegroundColor Cyan
-}
+        Write-Host " Checking component: $Name" -ForegroundColor Cyan
+    }
 
     $found = $false
 
@@ -52,7 +53,8 @@ function Test-ComponentInstalled {
                 if ($VerboseOutput) { Write-Host "Found command: $($command.Source)" }
                 $found = $true
             }
-        } catch {
+        }
+        catch {
             if ($VerboseOutput) { Write-Host "Command not found in PATH." }
         }
     }
@@ -73,8 +75,8 @@ function Test-ComponentInstalled {
                     if ($VerboseOutput) { Write-Host "Found in registry: $($entries -join ', ')" -ForegroundColor Green }
                     $found = $true
                     break
-                } else 
-                {
+                }
+                else {
                     if ($VerboseOutput) { Write-Host "Not found in registry." }
                 }
             }
@@ -84,7 +86,7 @@ function Test-ComponentInstalled {
     if (-not $found -and $ExpectedPaths.Count -gt 0) {
         foreach ($path in $ExpectedPaths) {
             if (Test-Path $path) {
-                if ($VerboseOutput) { Write-Host "Found at expected path: $path" -ForegroundColor Green}
+                if ($VerboseOutput) { Write-Host "Found at expected path: $path" -ForegroundColor Green }
                 $found = $true
                 break
             }
@@ -109,14 +111,15 @@ function Test-ComponentInstalled {
             if (Test-Path $dir) {
                 try {
                     $match = Get-ChildItem -Path $dir -Recurse -ErrorAction SilentlyContinue | Where-Object { $_.Name -eq "$Name.exe" } |
-                               Where-Object { $_.Length -lt 10MB }
+                    Where-Object { $_.Length -lt 10MB }
 
                     if ($match.Count -gt 0) {
-                        if ($VerboseOutput) { Write-Host "Found in common dir: $($match[0].FullName)" -ForegroundColor Green}
+                        if ($VerboseOutput) { Write-Host "Found in common dir: $($match[0].FullName)" -ForegroundColor Green }
                         $found = $true
                         break
                     }
-                } catch {
+                }
+                catch {
                     if ($VerboseOutput) { Write-Host "Error scanning $dir : $_" -ForegroundColor Red }
                 }
             }
@@ -139,12 +142,13 @@ function Get-FileHashString {
     return ""
 }
 
-function Is-ValidExe {
+function Read-ValidExe {
     param([string]$Path)
     try {
         $output = & $Path /?
         return $true
-    } catch {
+    }
+    catch {
         return $false
     }
 }

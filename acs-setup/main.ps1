@@ -8,10 +8,29 @@ $ModulesPath = "$(Split-Path -Path $MyInvocation.MyCommand.Definition)/modules"
 if (-not (Test-Path $LogDir)) { New-Item -ItemType Directory -Path $LogDir | Out-Null }
 
 function Write-Log {
-    param([string]$Message)
+    param(
+        [string]$Message,
+        [ValidateSet("Black", "DarkBlue", "DarkGreen", "DarkCyan", "DarkRed", "DarkMagenta", "DarkYellow", "Gray", "DarkGray", "Blue", "Green", "Cyan", "Red", "Magenta", "Yellow", "White")]
+        [string]$ForegroundColor,
+        [switch]$ToConsole
+    )
+
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    "$timestamp - $Message" | Tee-Object -Append -FilePath $LogFile
+    $formatted = "$timestamp - $Message"
+
+    if ($ToConsole) {
+        if ($PSBoundParameters.ContainsKey("ForegroundColor")) {
+            Write-Host $formatted -ForegroundColor $ForegroundColor
+        }
+        else {
+            Write-Host $formatted
+        }
+    }
+
+    $formatted | Tee-Object -Append -FilePath $LogFile | Out-Null
 }
+
+
 
 # Initialize summary
 $Summary = @{}
